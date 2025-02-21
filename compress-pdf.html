@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Compress your PDF files online with our fully responsive PDF compression tool. Optimize PDFs for web use with adjustable compression levels.">
+    <meta name="keywords" content="PDF compressor, compress PDF, PDF optimizer, compress PDF online">
+    <meta name="author" content="Your Name">
+    <title>PDF Compressor Tool</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_AD_UNIT_ID" crossorigin="anonymous"></script>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        main {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        /* PDF Compressor Tool Styles */
+        #compressor-tool {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #pdf-input {
+            display: none;
+        }
+
+        .upload-label {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-label:hover {
+            background-color: #45a049;
+        }
+
+        #compress-level {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        #compress-value {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        #compress-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #compress-btn:hover {
+            background-color: #45a049;
+        }
+
+        #output-info {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+        }
+
+        #download-link {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #download-link:hover {
+            background-color: #45a049;
+        }
+
+        /* Ad Unit Styles */
+        .ad-unit {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Footer Styles */
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            width: 100%;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            #compressor-tool {
+                gap: 15px;
+            }
+
+            .upload-label, #compress-btn, #download-link {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>PDF Compressor Tool</h1>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- PDF Compressor Tool -->
+        <section id="compressor-tool">
+            <label for="pdf-input" class="upload-label">Upload PDF</label>
+            <input type="file" id="pdf-input" accept="application/pdf">
+            <label for="compress-level">Compression Level: <span id="compress-value">50%</span></label>
+            <input type="range" id="compress-level" min="10" max="100" step="10" value="50">
+            <button id="compress-btn">Compress PDF</button>
+            <div id="output-info">
+                <p>Original File Size: <span id="original-size">-</span></p>
+                <p>Compressed File Size: <span id="compressed-size">-</span></p>
+            </div>
+            <a id="download-link" href="#" download="compressed-pdf.pdf">Download Compressed PDF</a>
+        </section>
+
+        <!-- AdSense Ad Unit -->
+        <div class="ad-unit">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-YOUR_AD_UNIT_ID"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2023 PDF Compressor Tool. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // File size limit (10MB)
+        const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
+
+        // Update compression level value
+        document.getElementById('compress-level').addEventListener('input', function() {
+            document.getElementById('compress-value').textContent = `${this.value}%`;
+        });
+
+        // Compress PDF functionality (front-end simulation)
+        document.getElementById('compress-btn').addEventListener('click', function() {
+            const file = document.getElementById('pdf-input').files[0];
+            if (file) {
+                if (file.size > MAX_FILE_SIZE) {
+                    alert('File size exceeds the limit of 10MB. Please upload a smaller file.');
+                    return;
+                }
+
+                // Display original file size
+                const originalSize = (file.size / 102400).toFixed(2);
+                document.getElementById('original-size').textContent = `${originalSize} KB`;
+
+                // Simulate compression (backend integration required for actual compression)
+                const compressLevel = parseInt(document.getElementById('compress-level').value) / 100;
+                const compressedSize = (file.size * compressLevel / 1024).toFixed(2);
+                document.getElementById('compressed-size').textContent = `${compressedSize} KB`;
+
+                // Enable download link (simulated)
+                document.getElementById('download-link').style.display = 'block';
+                document.getElementById('download-link').href = URL.createObjectURL(file); // Replace with actual compressed file
+            } else {
+                alert('Please upload a PDF file.');
+            }
+        });
+    </script>
+</body>
+</html>
