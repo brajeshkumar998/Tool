@@ -150,17 +150,32 @@
         }
 
         /* Responsive Design */
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             h1 {
                 font-size: 1.5rem;
             }
 
+            main {
+                padding: 15px;
+            }
+
             #compressor-tool {
+                flex-direction: column;
+                align-items: stretch;
                 gap: 15px;
             }
 
-            .upload-label, #compress-btn, #download-link {
-                padding: 8px 16px;
+            .upload-label, #compress-btn, #download-link, #compress-level {
+                width: 100%;
+                padding: 10px;
+                font-size: 1rem;
+            }
+
+            #compress-level {
+                max-width: 100%;
+            }
+
+            #output-info {
                 font-size: 0.9rem;
             }
         }
@@ -209,37 +224,51 @@
 
     <!-- JavaScript -->
     <script>
-        // File size limit (10MB)
-        const MAX_FILE_SIZE = 200 * 1024 * 1024; // 200MB in bytes
-        // Update compression level value
-        document.getElementById('compress-level').addEventListener('input', function() {
-            document.getElementById('compress-value').textContent = `${this.value}%`;
+        const MAX_FILE_SIZE = 200 * 1024 * 1024; // 200MB
+        const compressLevelInput = document.getElementById('compress-level');
+        const compressValueDisplay = document.getElementById('compress-value');
+        const pdfInput = document.getElementById('pdf-input');
+        const compressButton = document.getElementById('compress-btn');
+        const originalSizeDisplay = document.getElementById('original-size');
+        const compressedSizeDisplay = document.getElementById('compressed-size');
+        const downloadLink = document.getElementById('download-link');
+
+        compressLevelInput.addEventListener('input', () => {
+            compressValueDisplay.textContent = `${compressLevelInput.value}%`;
         });
 
-        // Compress PDF functionality (front-end simulation)
-        document.getElementById('compress-btn').addEventListener('click', function() {
-            const file = document.getElementById('pdf-input').files[0];
-            if (file) {
-                if (file.size > MAX_FILE_SIZE) {
-                    alert('File size exceeds the limit of 10MB. Please upload a smaller file.');
-                    return;
-                }
+        compressButton.addEventListener('click', () => {
+            const file = pdfInput.files[0];
 
-                // Display original file size
-                const originalSize = (file.size / (1024 * 1024)).toFixed(2); // Size in MB
-                document.getElementById('original-size').textContent = `${originalSize} KB`;
-
-                // Simulate compression (backend integration required for actual compression)
-                const compressLevel = parseInt(document.getElementById('compress-level').value) / 100;
-                const compressedSize = (file.size * compressLevel / (1024*1024).toFixed(2);
-                document.getElementById('compressed-size').textContent = `${compressedSize} KB`;
-
-                // Enable download link (simulated)
-                document.getElementById('download-link').style.display = 'block';
-                document.getElementById('download-link').href = URL.createObjectURL(file); // Replace with actual compressed file
-            } else {
+            if (!file) {
                 alert('Please upload a PDF file.');
+                return;
             }
+
+            if (file.size > MAX_FILE_SIZE) {
+                alert(`File size exceeds the limit of ${MAX_FILE_SIZE / (1024 * 1024)}MB.`);
+                pdfInput.value = ''; // Clear the input
+                return;
+            }
+
+            const originalSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+            originalSizeDisplay.textContent = `${originalSizeMB} MB`;
+
+            // Simulate compression (REPLACE with actual backend compression)
+            const compressLevel = parseInt(compressLevelInput.value) / 100;
+            const compressedSizeMB = (file.size * compressLevel / (1024 * 1024)).toFixed(2);
+            compressedSizeDisplay.textContent = `${compressedSizeMB} MB`;
+
+            // For demonstration, create a dummy Blob (replace with actual compressed data)
+            const compressedBlob = new Blob(["Simulated Compressed PDF"], { type: 'application/pdf' });
+            const compressedUrl = URL.createObjectURL(compressedBlob);
+
+            downloadLink.href = compressedUrl;
+            downloadLink.style.display = 'block';
+        });
+
+        pdfInput.addEventListener('change', () => {
+            downloadLink.style.display = 'none'; // Hide download link when a new file is selected
         });
     </script>
 </body>
