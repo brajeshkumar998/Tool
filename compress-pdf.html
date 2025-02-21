@@ -210,8 +210,7 @@
     <!-- JavaScript -->
     <script>
         // File size limit (10MB)
-        const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
-
+        const MAX_FILE_SIZE = 200 * 1024 * 1024; // 200MB in bytes
         // Update compression level value
         document.getElementById('compress-level').addEventListener('input', function() {
             document.getElementById('compress-value').textContent = `${this.value}%`;
@@ -227,12 +226,12 @@
                 }
 
                 // Display original file size
-                const originalSize = (file.size / 102400).toFixed(2);
+                const originalSize = (file.size / (1024 * 1024)).toFixed(2); // Size in MB
                 document.getElementById('original-size').textContent = `${originalSize} KB`;
 
                 // Simulate compression (backend integration required for actual compression)
                 const compressLevel = parseInt(document.getElementById('compress-level').value) / 100;
-                const compressedSize = (file.size * compressLevel / 1024).toFixed(2);
+                const compressedSize = (file.size * compressLevel / (1024*1024).toFixed(2);
                 document.getElementById('compressed-size').textContent = `${compressedSize} KB`;
 
                 // Enable download link (simulated)
