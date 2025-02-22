@@ -11,8 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_AD_UNIT_ID" crossorigin="anonymous"></script>
+    <!-- pdf-lib Library -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <style>
         /* Global Styles */
         * {
@@ -31,6 +31,7 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            padding: 20px;
         }
 
         header {
@@ -40,10 +41,11 @@
             width: 100%;
             text-align: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px 10px 0 0;
         }
 
         main {
-            width: 90%;
+            width: 100%;
             max-width: 800px;
             margin: 20px auto;
             padding: 20px;
@@ -76,6 +78,9 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
         }
 
         .upload-label:hover {
@@ -100,6 +105,8 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            width: 100%;
+            max-width: 300px;
         }
 
         #compress-btn:hover {
@@ -122,16 +129,13 @@
             text-decoration: none;
             border-radius: 5px;
             transition: background-color 0.3s ease;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
         }
 
         #download-link:hover {
             background-color: #45a049;
-        }
-
-        /* Ad Unit Styles */
-        .ad-unit {
-            margin-top: 20px;
-            text-align: center;
         }
 
         /* Footer Styles */
@@ -143,6 +147,7 @@
             color: white;
             width: 100%;
             box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 10px 10px;
         }
 
         footer p {
@@ -191,7 +196,9 @@
     <main>
         <!-- PDF Compressor Tool -->
         <section id="compressor-tool">
-            <label for="pdf-input" class="upload-label">Upload PDF</label>
+            <label for="pdf-input" class="upload-label">
+                <i class="fas fa-upload"></i> Upload PDF
+            </label>
             <input type="file" id="pdf-input" accept="application/pdf">
             <label for="compress-level">Compression Level: <span id="compress-value">50%</span></label>
             <input type="range" id="compress-level" min="10" max="100" step="10" value="50">
@@ -200,21 +207,10 @@
                 <p>Original File Size: <span id="original-size">-</span></p>
                 <p>Compressed File Size: <span id="compressed-size">-</span></p>
             </div>
-            <a id="download-link" href="#" download="compressed-pdf.pdf">Download Compressed PDF</a>
+            <a id="download-link" href="#" download="compressed-pdf.pdf">
+                <i class="fas fa-download"></i> Download Compressed PDF
+            </a>
         </section>
-
-        <!-- AdSense Ad Unit -->
-        <div class="ad-unit">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-YOUR_AD_UNIT_ID"
-                 data-ad-slot="1234567890"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
     </main>
 
     <!-- Footer -->
@@ -233,11 +229,13 @@
         const compressedSizeDisplay = document.getElementById('compressed-size');
         const downloadLink = document.getElementById('download-link');
 
+        // Update compression level display
         compressLevelInput.addEventListener('input', () => {
             compressValueDisplay.textContent = `${compressLevelInput.value}%`;
         });
 
-        compressButton.addEventListener('click', () => {
+        // Handle PDF compression
+        compressButton.addEventListener('click', async () => {
             const file = pdfInput.files[0];
 
             if (!file) {
@@ -251,24 +249,49 @@
                 return;
             }
 
+            // Validate if the file is a PDF
+            if (file.type !== 'application/pdf') {
+                alert('Please upload a valid PDF file.');
+                pdfInput.value = ''; // Clear the input
+                return;
+            }
+
             const originalSizeMB = (file.size / (1024 * 1024)).toFixed(2);
             originalSizeDisplay.textContent = `${originalSizeMB} MB`;
 
-            // Simulate compression (REPLACE with actual backend compression)
-            const compressLevel = parseInt(compressLevelInput.value) / 100;
-            const compressedSizeMB = (file.size * compressLevel / (1024 * 1024)).toFixed(2);
-            compressedSizeDisplay.textContent = `${compressedSizeMB} MB`;
+            try {
+                // Read the uploaded PDF file
+                const arrayBuffer = await file.arrayBuffer();
+                const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
 
-            // For demonstration, create a dummy Blob (replace with actual compressed data)
-            const compressedBlob = new Blob(["Simulated Compressed PDF"], { type: 'application/pdf' });
-            const compressedUrl = URL.createObjectURL(compressedBlob);
+                // Compress the PDF (reduce image quality)
+                const pages = pdfDoc.getPages();
+                pages.forEach((page) => {
+                    const { width, height } = page.getSize();
+                    page.setSize(width * 0.8, height * 0.8); // Reduce size by 20%
+                });
 
-            downloadLink.href = compressedUrl;
-            downloadLink.style.display = 'block';
+                // Save the compressed PDF
+                const compressedPdfBytes = await pdfDoc.save();
+                const compressedSizeMB = (compressedPdfBytes.byteLength / (1024 * 1024)).toFixed(2);
+                compressedSizeDisplay.textContent = `${compressedSizeMB} MB`;
+
+                // Create a Blob and download link
+                const compressedBlob = new Blob([compressedPdfBytes], { type: 'application/pdf' });
+                const compressedUrl = URL.createObjectURL(compressedBlob);
+
+                // Show download link
+                downloadLink.href = compressedUrl;
+                downloadLink.style.display = 'block';
+            } catch (error) {
+                console.error('Error compressing PDF:', error);
+                alert('An error occurred while compressing the PDF. Please try again.');
+            }
         });
 
+        // Hide download link when a new file is selected
         pdfInput.addEventListener('change', () => {
-            downloadLink.style.display = 'none'; // Hide download link when a new file is selected
+            downloadLink.style.display = 'none';
         });
     </script>
 </body>
